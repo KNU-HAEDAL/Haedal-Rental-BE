@@ -1,0 +1,39 @@
+server:
+  port: 8080
+
+# DB
+spring:
+  datasource:
+    url:
+      jdbc:h2:mem:~./testdb;DB_CLOSE_DELAY=-1 # 이거 왜 이렇게 한거지...?
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      connection-timeout: 30000
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+# Swagger
+springdoc:
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  api-docs:
+    groups:
+      enabled: true
+  swagger-ui:
+    path: /swagger
+    disable-swagger-default-url: true
+    doc-expansion: none
+  paths-to-match:
+    - /**  #애플리 케이션의 모든 api(엔드포인트)
