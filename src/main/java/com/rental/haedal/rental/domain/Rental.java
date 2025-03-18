@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-public class Book {
+public class Rental {
     @Id @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,6 +19,7 @@ public class Book {
     @JoinColumn(name = "itemId")
     private Item item;
 
+    // JSON에서 직렬화 필요
     @Column(name = "rentalDuration")
     private Date rentalDuration;
 }
