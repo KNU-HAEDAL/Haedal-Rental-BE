@@ -3,11 +3,12 @@ package com.rental.haedal.rental.domain;
 import com.rental.haedal.auth.domain.Member;
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 public class Rental {
-    @Id @Column(name = "id")
+    @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -18,8 +19,10 @@ public class Rental {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "itemId")
     private Item item;
+    
+    @Column(name = "rentalDate")
+    private LocalDate rentalDate;
 
-    // JSON에서 직렬화 필요
-    @Column(name = "rentalDuration")
-    private Date rentalDuration;
+    @Column(name = "returnDate")
+    private LocalDate returnDate;
 }
