@@ -21,7 +21,7 @@ public class Member {
     private String phoneNumber;
 
     @Column(name = "penaltyCount")
-    private int penaltyCount;
+    private Integer penaltyCount;
 
     @Column(name = "authority", nullable = false)
     @Enumerated(EnumType.STRING)
