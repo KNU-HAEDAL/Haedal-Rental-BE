@@ -5,35 +5,18 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
-import java.util.Base64;
 
 @Component
 @RequiredArgsConstructor
 public class AuthFilter extends OncePerRequestFilter {
-
+    private final AuthUtil authUtil;
 
     private final AuthService authService;
-
-    @Value("${jwt.secret}")
-    private String key;
-
-    private SecretKey secretKey;
-
-    // SecretKey 초기화
-    @Override
-    protected void initFilterBean() {
-        byte[] decodedKey = Base64.getDecoder().decode(key);
-        this.secretKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, "HmacSHA256");
-    }
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -64,7 +47,7 @@ public class AuthFilter extends OncePerRequestFilter {
         String token = authorizationHeader.split(" ")[1];
 
         // 전송 받은 token 값의 유효성 검증
-        if (AuthUtil.isExpired(token, secretKey)) {
+        if (authUtil.isExpired(token)) {
             filterChain.doFilter(request, response);
             return;
         }
