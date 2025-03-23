@@ -4,6 +4,7 @@ import com.rental.haedal.auth.dto.req.IdCheckRequest;
 import com.rental.haedal.auth.dto.req.LoginRequest;
 import com.rental.haedal.auth.dto.req.PhoneNumberCheckRequest;
 import com.rental.haedal.auth.dto.req.SignUpRequest;
+import com.rental.haedal.auth.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Auth", description = "Auth API")
 public class AuthController {
     // 의존성 주입을 위해 띄움.
+    private final AuthService authService;
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "사용자가 로그인을 함.")
