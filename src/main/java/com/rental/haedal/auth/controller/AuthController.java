@@ -11,8 +11,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -28,7 +32,25 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
     public ResponseEntity<Void> userLogin(@RequestBody @Parameter LoginRequest request) {
-        return ResponseEntity.ok().build();
+        try {
+            // 로그인 요청 처리 및 토큰 생성
+            Map<String, String> tokens = authService.login(request);
+
+            // 토큰을 헤더에 추가
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + tokens.get("accessToken"));
+            headers.add("Refresh-Token", tokens.get("refreshToken"));
+
+            // 토큰을 헤더에 담아 성공 응답 반환
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .headers(headers)
+                    .build();
+
+        } catch (RuntimeException e) {
+            // 인증 실패 시 401 Unauthorized 반환
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @PostMapping("/duplicate/id")
