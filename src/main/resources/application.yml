@@ -43,8 +43,8 @@ jwt:
   secret: HAEDALRentalListVe2132312rySecretKeyITisVERYIM00RTANT125112312HAEDALRentalListVe2132312rySecretKeyITisVERYIM00RTANT125112312HAEDALRentalListVe2132312rySecretKeyITisVERYIM00RTANT125112312
 
 
-logging:
-  level:
-    root: DEBUG # 모든 로거의 기본 레벨을 DEBUG로 설정
-    org.springframework.security: DEBUG # Spring Security 관련 로깅을 DEBUG로 설정
-    com.rental.haedal.auth: TRACE # 특정 패키지 로깅 레벨을 TRACE로 설정
+#logging:
+#  level:
+#    root: DEBUG # 모든 로거의 기본 레벨을 DEBUG로 설정
+#    org.springframework.security: DEBUG # Spring Security 관련 로깅을 DEBUG로 설정
+#    com.rental.haedal.auth: TRACE # 특정 패키지 로깅 레벨을 TRACE로 설정
