@@ -45,7 +45,7 @@ public class AuthService {
         Member member = Member.builder()
                 .userId(request.id())
                 .password(request.password())
-                .userName(request.userName())
+                .name(request.name())
                 .phoneNumber(request.phoneNumber())
                 .build();
 
