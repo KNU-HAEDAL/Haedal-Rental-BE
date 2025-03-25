@@ -2,10 +2,10 @@ package com.rental.haedal.admin.controller;
 
 
 import com.rental.haedal.admin.dto.req.AdminAddItemRequest;
-import com.rental.haedal.admin.dto.req.AdminItemListRequest;
 import com.rental.haedal.admin.dto.req.AdminItemRequest;
 import com.rental.haedal.admin.dto.res.AdminItemDetailResponse;
 import com.rental.haedal.admin.dto.res.AdminItemListResponse;
+import com.rental.haedal.rental.domain.ItemStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -33,12 +33,12 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/itemList")
-    @Operation(summary = "페이지 물품 조회", description = "관리자가 페이지의 물품을 조회함.")
+    @GetMapping("/itemList")
+    @Operation(summary = "상태별 물품리스트 조회", description = "관리자가 페이지의 물품을 조회함.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
-    public ResponseEntity<List<AdminItemListResponse>> adminCheckItemList(@RequestBody @Parameter AdminItemListRequest request) {
+    public ResponseEntity<List<AdminItemListResponse>> adminCheckItemList(@RequestParam @Parameter ItemStatus itemStatus) {
         return ResponseEntity.ok().build();
     }
 
