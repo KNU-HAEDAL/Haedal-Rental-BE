@@ -49,7 +49,7 @@ public class RentalController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
-    public ResponseEntity<List<UserRentalResponse>> getUserItemList() {
+    public ResponseEntity<UserRentalResponse> getUserItemList() {
         return ResponseEntity.ok().build();
     }
 
