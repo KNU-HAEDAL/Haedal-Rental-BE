@@ -38,7 +38,7 @@ public class AdminController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
-    public ResponseEntity<List<AdminItemListResponse>> adminCheckItemList(@RequestParam @Parameter ItemStatus itemStatus) {
+    public ResponseEntity<List<AdminItemListResponse>> adminCheckItemList(@RequestParam @Parameter(description = "아이템 상태") ItemStatus itemStatus) {
         return ResponseEntity.ok().build();
     }
 

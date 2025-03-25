@@ -29,7 +29,7 @@ public class RentalController {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
     public ResponseEntity<List<ItemListResponse>> getItemList(
-            @RequestParam @Parameter ItemCategory itemCategory
+            @RequestParam @Parameter(description = "아이템 카테고리") ItemCategory itemCategory
     ) {
         return ResponseEntity.ok().build();
     }
@@ -45,7 +45,7 @@ public class RentalController {
     }
 
     @GetMapping("")
-    @Operation(summary = "유저의 빌린 물품 확인", description = "유저 ID로 빌린 물품을 확인합니다.")
+    @Operation(summary = "유저의 빌린 물품 확인", description = "Token 값에서 유저 ID를 추출하여 빌린 물품을 확인합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
