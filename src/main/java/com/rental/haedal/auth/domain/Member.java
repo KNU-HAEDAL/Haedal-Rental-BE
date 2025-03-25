@@ -21,8 +21,8 @@ public class Member {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "userName", nullable = false)
-    private String userName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "phoneNumber")
     private String phoneNumber;
@@ -42,12 +42,12 @@ public class Member {
     public Member(
             String userId,
             String password,
-            String userName,
+            String name,
             String phoneNumber
     ) {
         this.userId = userId;
         this.password = password;
-        this.userName = userName;
+        this.name = name;
         this.phoneNumber = phoneNumber;
         this.penaltyCount = 0;
         this.authority = MemberType.MEMBER;
