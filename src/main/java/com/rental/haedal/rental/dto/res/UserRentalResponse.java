@@ -4,6 +4,6 @@ import java.util.List;
 
 public record UserRentalResponse(
         Integer penaltyCount,
-        List<ItemListResponse> userRentalItemList
+        List<ItemResponse> userRentalItemList
 ) {
 }

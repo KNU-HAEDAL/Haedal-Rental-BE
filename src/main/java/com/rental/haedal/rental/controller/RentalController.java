@@ -3,7 +3,7 @@ package com.rental.haedal.rental.controller;
 import com.rental.haedal.rental.domain.ItemCategory;
 import com.rental.haedal.rental.dto.req.ItemReturnRequest;
 import com.rental.haedal.rental.dto.req.RentalRequest;
-import com.rental.haedal.rental.dto.res.ItemListResponse;
+import com.rental.haedal.rental.dto.res.ItemResponse;
 import com.rental.haedal.rental.dto.res.UserRentalResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -28,7 +28,7 @@ public class RentalController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
-    public ResponseEntity<List<ItemListResponse>> getItemList(
+    public ResponseEntity<List<ItemResponse>> getItemList(
             @RequestParam @Parameter(description = "아이템 카테고리") ItemCategory itemCategory
     ) {
         return ResponseEntity.ok().build();
