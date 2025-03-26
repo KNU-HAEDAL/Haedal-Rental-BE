@@ -1,12 +1,9 @@
 package com.rental.haedal.rental.dto.res;
 
-import com.rental.haedal.rental.domain.ItemCategory;
-import com.rental.haedal.rental.domain.ItemStatus;
+import java.util.List;
 
 public record UserRentalResponse(
-        ItemCategory itemCategory,
-        String itemName,
-        ItemStatus itemStatus,
-        Integer penaltyCount
+        Integer penaltyCount,
+        List<ItemResponse> userRentalItemList
 ) {
 }
