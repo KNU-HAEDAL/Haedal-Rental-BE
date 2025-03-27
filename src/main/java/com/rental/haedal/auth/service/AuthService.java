@@ -25,16 +25,12 @@ public class AuthService {
     // Login
     @Transactional
     public Map<String, String> login(LoginRequest request) {
-        System.out.println("오류발생!!!!" + request.id() + " " + request.password());
-        Optional<Member> member = memberRepository.findByUserIdAndPassword(request.id(), request.password());
-        if (!member.isPresent()) {
-            System.out.println("아이디랑 비밀번호 잘못됨");
-            throw new RuntimeException("아이디 또는 비밀번호가 잘못되었습니다.");
-        }
+        Member member = memberRepository.findByUserIdAndPassword(request.id(), request.password())
+                .orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 잘못되었습니다."));
 
         Map<String, String> tokens = new HashMap<>();
-        tokens.put("accessToken", authUtil.createAccessToken(member.get().getUserId(), expireTimeMs));
-        tokens.put("refreshToken", authUtil.createRefreshToken(member.get().getUserId(), refreshExpireTimeMs));
+        tokens.put("accessToken", authUtil.createAccessToken(member.getUserId(), expireTimeMs));
+        tokens.put("refreshToken", authUtil.createRefreshToken(member.getUserId(), refreshExpireTimeMs));
 
         return tokens;
     }
