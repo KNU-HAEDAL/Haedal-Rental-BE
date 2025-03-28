@@ -34,11 +34,11 @@ public class AuthUtil {
     }
 
     // JWT Access Token 발급
-    public String createAccessToken(String loginId, long accessExpireTimeMs) {
+    public String createAccessToken(String userId, long accessExpireTimeMs) {
         try {
             return Jwts.builder()
                     .issuer("server")
-                    .claim("memberId", loginId)
+                    .claim("userId", userId)
                     .claim("tokenType", "access")
                     .expiration(new Date(System.currentTimeMillis() + accessExpireTimeMs))
                     .issuedAt(new Date(System.currentTimeMillis()))
@@ -50,11 +50,11 @@ public class AuthUtil {
     }
 
     // JWT Refresh Token 발급
-    public String createRefreshToken(String loginId, long refreshExpireTimeMs) {
+    public String createRefreshToken(String userId, long refreshExpireTimeMs) {
         try {
             return Jwts.builder()
                     .issuer("server")
-                    .claim("memberId", loginId)
+                    .claim("userId", userId)
                     .claim("tokenType", "refresh")
                     .expiration(new Date(System.currentTimeMillis() + refreshExpireTimeMs))
                     .issuedAt(new Date(System.currentTimeMillis()))

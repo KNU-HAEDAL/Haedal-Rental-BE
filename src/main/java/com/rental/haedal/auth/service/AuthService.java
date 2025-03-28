@@ -2,20 +2,23 @@ package com.rental.haedal.auth.service;
 
 import com.rental.haedal.auth.domain.Member;
 import com.rental.haedal.auth.domain.MemberRepository;
+import com.rental.haedal.auth.domain.MemberUserDetails;
 import com.rental.haedal.auth.dto.req.LoginRequest;
 import com.rental.haedal.auth.dto.req.SignUpRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final AuthUtil authUtil;
 
@@ -25,16 +28,12 @@ public class AuthService {
     // Login
     @Transactional
     public Map<String, String> login(LoginRequest request) {
-        System.out.println("오류발생!!!!" + request.id() + " " + request.password());
-        Optional<Member> member = memberRepository.findByUserIdAndPassword(request.id(), request.password());
-        if (!member.isPresent()) {
-            System.out.println("아이디랑 비밀번호 잘못됨");
-            throw new RuntimeException("아이디 또는 비밀번호가 잘못되었습니다.");
-        }
+        Member member = memberRepository.findByUserIdAndPassword(request.id(), request.password())
+                .orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 잘못되었습니다."));
 
         Map<String, String> tokens = new HashMap<>();
-        tokens.put("accessToken", authUtil.createAccessToken(member.get().getUserId(), expireTimeMs));
-        tokens.put("refreshToken", authUtil.createRefreshToken(member.get().getUserId(), refreshExpireTimeMs));
+        tokens.put("accessToken", authUtil.createAccessToken(member.getUserId(), expireTimeMs));
+        tokens.put("refreshToken", authUtil.createRefreshToken(member.getUserId(), refreshExpireTimeMs));
 
         return tokens;
     }
@@ -57,5 +56,11 @@ public class AuthService {
 //
 //    }
 
-    //JWT 전체 보기 먼저 해야할듯해서 일단 STOP
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Member member = memberRepository.findByUserId(username)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username));
+
+        return new MemberUserDetails(member);
+    }
 }

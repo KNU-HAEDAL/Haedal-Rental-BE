@@ -1,11 +1,15 @@
 package com.rental.haedal.auth.service;
 
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -52,32 +56,30 @@ public class AuthFilter extends OncePerRequestFilter {
             return;
         }
 
-//        // 토큰에서 사용자 정보 추출
-//        Claims claims = AuthUtil.extractClaims(token, key);
-//        String username = claims.getSubject();
-//
-//        // SecurityContext에 인증 정보가 없는 경우에만 설정
-//        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-//            // UserDetails 로드
-//            UserDetails userDetails = authService.loadUserByUsername(username);
-//
-//            // 추가적인 토큰 검증이 필요한 경우 여기서 수행
-//            if (AuthUtil.validateToken(token, userDetails, key)) {
-//                // 인증 객체 생성 및 SecurityContext에 설정
-//                UsernamePasswordAuthenticationToken authToken =
-//                        new UsernamePasswordAuthenticationToken(
-//                                userDetails,
-//                                null, // credentials (비밀번호)는 이미 검증되었으므로 null
-//                                userDetails.getAuthorities()
-//                        );
-//
-//                // 요청 세부 정보 설정 (선택사항)
-//                // authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-//
-//                // SecurityContext에 인증 객체 설정
-//                SecurityContextHolder.getContext().setAuthentication(authToken);
-//            }
-//        }
+        // 토큰에서 사용자 정보 추출
+        Claims claims = authUtil.parsingToken(token);
+        String userId = claims.get("userId", String.class);
+
+        // SecurityContext에 인증 정보가 없는 경우에만 설정
+        if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            // UserDetails 로드
+            UserDetails userDetails = authService.loadUserByUsername(userId);
+
+            // 인증 객체 생성 및 SecurityContext에 설정
+            UsernamePasswordAuthenticationToken authToken =
+                    new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null, // credentials (비밀번호)는 이미 검증되었으므로 null
+                            userDetails.getAuthorities()
+                    );
+
+            // 요청 세부 정보 설정 (선택사항)
+            // authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+            // SecurityContext에 인증 객체 설정
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+
+        }
 
         // 다음 필터로 요청 전달
         filterChain.doFilter(request, response);
