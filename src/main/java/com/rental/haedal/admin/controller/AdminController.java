@@ -24,8 +24,8 @@ import java.util.List;
 public class AdminController {
     // 의존성 주입을 위해 띄움.
 
-    @PostMapping("/rentalCheck")
-    @Operation(summary = "물품 상태 바꾸기", description = "관리자가 물품 상태를 바꿈.")
+    @PutMapping("/rentalCheck")
+    @Operation(summary = "동방 물품의 상태 바꾸기", description = "관리자가 물품 상태를 바꿈으로써 동아리 물품을 대여할 수 있도록 함.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
@@ -60,12 +60,12 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/itemDetail")
+    @GetMapping("/itemDetail")
     @Operation(summary = "대여 물품 상세 조회", description = "관리자가 물품의 상세 정보를 확인함.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
-    public ResponseEntity<List<AdminItemDetailResponse>> adminItemDetail(@RequestBody @Parameter AdminItemRequest request) {
+    public ResponseEntity<List<AdminItemDetailResponse>> adminItemDetail(@RequestParam @Parameter Long itemId, @RequestParam @Parameter ItemStatus itemStatus) {
         return ResponseEntity.ok().build();
     }
 }
