@@ -3,6 +3,7 @@ package com.rental.haedal.rental.controller;
 import com.rental.haedal.rental.domain.ItemCategory;
 import com.rental.haedal.rental.dto.req.ItemReturnRequest;
 import com.rental.haedal.rental.dto.req.RentalRequest;
+import com.rental.haedal.rental.dto.res.ItemRentalResponse;
 import com.rental.haedal.rental.dto.res.ItemResponse;
 import com.rental.haedal.rental.dto.res.UserRentalResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,11 +37,11 @@ public class RentalController {
 
 
     @PostMapping("")
-    @Operation(summary = "물품 대여", description = "물품 대여 장부를 작성하여 전송합니다.")
+    @Operation(summary = "물품 대여", description = "물품 대여 장부를 작성하여 전송합니다. 대여한 itemId를 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
-    public ResponseEntity<Void> postRental(@RequestBody @Parameter RentalRequest request) {
+    public ResponseEntity<ItemRentalResponse> postRental(@RequestBody @Parameter RentalRequest request) {
         return ResponseEntity.ok().build();
     }
 
@@ -54,11 +55,11 @@ public class RentalController {
     }
 
     @PostMapping("/return")
-    @Operation(summary = "물품 반납", description = "물품을 반납합니다.")
+    @Operation(summary = "물품 반납", description = "물품을 반납하고 해당 itemId 값을 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
-    public ResponseEntity<Void> returnRentalItem(@RequestBody @Parameter ItemReturnRequest request) {
+    public ResponseEntity<ItemRentalResponse> returnRentalItem(@RequestBody @Parameter ItemReturnRequest request) {
         return ResponseEntity.ok().build();
     }
 }
