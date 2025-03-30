@@ -99,13 +99,4 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/userId")
-    @Operation(summary = "ID 확인", description = "사용자 ID 확인")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공"),
-    })
-    public ResponseEntity<Void> userId() {
-        return ResponseEntity.ok().build();
-    }
-
 }
