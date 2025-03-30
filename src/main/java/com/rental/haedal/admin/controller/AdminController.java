@@ -24,7 +24,7 @@ import java.util.List;
 public class AdminController {
     // 의존성 주입을 위해 띄움.
 
-    @PutMapping("/rentalCheck")
+    @PutMapping("/changeItemStatus")
     @Operation(summary = "동방 물품의 상태 바꾸기", description = "관리자가 물품 상태를 바꿈으로써 동아리 물품을 대여할 수 있도록 함.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
