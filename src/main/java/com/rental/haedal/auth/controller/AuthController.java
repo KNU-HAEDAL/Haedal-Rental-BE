@@ -31,7 +31,7 @@ public class AuthController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
-    public ResponseEntity<Void> userLogin(@RequestBody @Parameter LoginRequest request) {
+    public ResponseEntity<?> userLogin(@RequestBody @Parameter LoginRequest request) {
         try {
             // 로그인 요청 처리 및 토큰 생성
             Map<String, String> tokens = authService.login(request);
@@ -54,20 +54,20 @@ public class AuthController {
     }
 
     @PostMapping("/duplicate/id")
-    @Operation(summary = "아이디 중복확인", description = "회원가입시 아이디가 중복되는지 확인")
+    @Operation(summary = "아이디 중복확인", description = "회원가입시 아이디가 중복되는지 확인. 중복 시 False 값을 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
-    public ResponseEntity<Void> registerIdCheck(@RequestBody @Parameter IdCheckRequest request) {
+    public ResponseEntity<Boolean> registerIdCheck(@RequestBody @Parameter IdCheckRequest request) {
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/duplicate/phoneNumber")
-    @Operation(summary = "전화번호 중복확인", description = "회원가입시 전화번호가 중복되는지 확인")
+    @Operation(summary = "전화번호 중복확인", description = "회원가입시 전화번호가 중복되는지 확인. 중복 시 False 값을 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
-    public ResponseEntity<Void> registerPhoneNumberCheck(@RequestBody @Parameter PhoneNumberCheckRequest request) {
+    public ResponseEntity<Boolean> registerPhoneNumberCheck(@RequestBody @Parameter PhoneNumberCheckRequest request) {
         return ResponseEntity.ok().build();
     }
 
@@ -76,9 +76,9 @@ public class AuthController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
-    public ResponseEntity<Void> signup(@RequestBody @Parameter SignUpRequest request) {
+    public ResponseEntity<?> signup(@RequestBody @Parameter SignUpRequest request) {
         authService.signup(request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("회원가입 성공");
     }
 
     @PostMapping("/refresh")
@@ -86,26 +86,17 @@ public class AuthController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
-    public ResponseEntity<Void> refreshToken() {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> refreshToken() {
+        return ResponseEntity.ok("토큰 재발급 성공");
     }
 
     @GetMapping("/logout")
-    @Operation(summary = "로그아웃", description = "사용자가 로그아웃")
+    @Operation(summary = "로그아웃", description = "사용자가 로그아웃. ")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
-    public ResponseEntity<Void> logout() {
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/userId")
-    @Operation(summary = "ID 확인", description = "사용자 ID 확인")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공"),
-    })
-    public ResponseEntity<Void> userId() {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> logout() {
+        return ResponseEntity.ok("로그아웃 성공");
     }
 
 }

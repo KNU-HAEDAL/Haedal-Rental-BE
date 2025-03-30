@@ -4,7 +4,9 @@ package com.rental.haedal.admin.controller;
 import com.rental.haedal.admin.dto.req.AdminAddItemRequest;
 import com.rental.haedal.admin.dto.req.AdminItemRequest;
 import com.rental.haedal.admin.dto.res.AdminItemDetailResponse;
+import com.rental.haedal.admin.dto.res.AdminItemEditResponse;
 import com.rental.haedal.admin.dto.res.AdminItemListResponse;
+import com.rental.haedal.admin.dto.res.AdminItemStatusChangeResponse;
 import com.rental.haedal.rental.domain.ItemStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,12 +26,12 @@ import java.util.List;
 public class AdminController {
     // 의존성 주입을 위해 띄움.
 
-    @PostMapping("/rentalCheck")
-    @Operation(summary = "물품 상태 바꾸기", description = "관리자가 물품 상태를 바꿈.")
+    @PutMapping("/changeItemStatus")
+    @Operation(summary = "동방 물품의 상태 바꾸기", description = "관리자가 물품 상태를 바꿈으로써 동아리 물품을 대여할 수 있도록 함.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
-    public ResponseEntity<Void> adminChangeItemStatus(@RequestBody @Parameter AdminItemRequest request) {
+    public ResponseEntity<AdminItemStatusChangeResponse> adminChangeItemStatus(@RequestBody @Parameter AdminItemRequest request) {
         return ResponseEntity.ok().build();
     }
 
@@ -43,29 +45,29 @@ public class AdminController {
     }
 
     @PostMapping("/item")
-    @Operation(summary = "대여 물품 추가", description = "관리자가 물품을 추가함.")
+    @Operation(summary = "대여 물품 추가", description = "관리자가 물품을 추가함. 추가한 물품의 데이터베이스상의 id 값 반환")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
-    public ResponseEntity<Void> adminAddItem(@RequestBody @Parameter AdminAddItemRequest request) {
+    public ResponseEntity<AdminItemEditResponse> adminAddItem(@RequestBody @Parameter AdminAddItemRequest request) {
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/item")
-    @Operation(summary = "대여 물품 삭제", description = "관리자가 물품을 삭제함.")
+    @Operation(summary = "대여 물품 삭제", description = "관리자가 물품을 삭제함. 삭제한 물품의 데이터베이스상의 id 값 반환")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
-    public ResponseEntity<Void> adminDeleteItem(@RequestBody @Parameter AdminItemRequest request) {
+    public ResponseEntity<AdminItemEditResponse> adminDeleteItem(@RequestBody @Parameter AdminItemRequest request) {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/itemDetail")
+    @GetMapping("/itemDetail/{itemId}")
     @Operation(summary = "대여 물품 상세 조회", description = "관리자가 물품의 상세 정보를 확인함.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
-    public ResponseEntity<List<AdminItemDetailResponse>> adminItemDetail(@RequestBody @Parameter AdminItemRequest request) {
+    public ResponseEntity<List<AdminItemDetailResponse>> adminItemDetail(@PathVariable @Parameter Long itemId) {
         return ResponseEntity.ok().build();
     }
 }
