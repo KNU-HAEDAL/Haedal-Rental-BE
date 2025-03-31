@@ -1,6 +1,6 @@
 package com.rental.haedal.config;
 
-import com.rental.haedal.auth.service.AuthFilter;
+import com.rental.haedal.auth.AuthFilter;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
