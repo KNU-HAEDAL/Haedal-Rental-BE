@@ -6,6 +6,7 @@ import com.rental.haedal.dto.rental.req.RentalRequest;
 import com.rental.haedal.dto.rental.res.ItemRentalResponse;
 import com.rental.haedal.dto.rental.res.ItemResponse;
 import com.rental.haedal.dto.rental.res.UserRentalResponse;
+import com.rental.haedal.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,7 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "Rental", description = "Rental API")
 public class RentalController {
-    // 의존성 주입을 위해 띄움.
+    private final ItemService itemService;
 
     @GetMapping("/itemList")
     @Operation(summary = "물품 조회", description = "대여가능한 전체 물품 목록을 조회합니다. 카테고리 타입에 따라 조회할 수 있습니다.")
@@ -30,9 +31,9 @@ public class RentalController {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
     public ResponseEntity<List<ItemResponse>> getItemList(
-            @RequestParam @Parameter(description = "아이템 카테고리") ItemCategory itemCategory
+            @RequestParam(required = false) @Parameter(description = "아이템 카테고리") ItemCategory itemCategory
     ) {
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(itemService.getItems(itemCategory));
     }
 
 
