@@ -54,7 +54,7 @@ public class RentalController {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
     public ResponseEntity<UserRentalResponse> getUserItemList() {
-        return ResponseEntity.ok(itemService.userRentalItem());
+        return ResponseEntity.ok(itemService.userRentItemList());
     }
 
     @PostMapping("/return")

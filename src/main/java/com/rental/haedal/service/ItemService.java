@@ -67,7 +67,7 @@ public class ItemService {
         return response;
     }
 
-    public UserRentalResponse userRentalItem() {
+    public UserRentalResponse userRentItemList() {
         Member member = authUtil.getCurrentUser();
 
         Integer penaltyCount = member.getPenaltyCount();
