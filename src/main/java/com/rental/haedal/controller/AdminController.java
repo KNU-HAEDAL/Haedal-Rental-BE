@@ -59,12 +59,12 @@ public class AdminController {
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "400", description = "해당 물품이 존재하지 않음")
     })
-    public ResponseEntity<?> adminDeleteItem(@RequestBody @Parameter AdminDeleteItemRequest request) {
+    public ResponseEntity<AdminItemDeleteResponse> adminDeleteItem(@RequestBody @Parameter AdminDeleteItemRequest request) {
         try {
-            Long itemId = itemService.deleteItem(request);
-            return ResponseEntity.ok(new AdminItemDeleteResponse(itemId));
+            itemService.deleteItem(request);
+            return ResponseEntity.ok(new AdminItemDeleteResponse("삭제에 성공했습니다."));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new AdminItemDeleteResponse(e.getMessage()));
         }
     }
 
