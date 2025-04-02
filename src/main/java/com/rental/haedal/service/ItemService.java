@@ -86,7 +86,7 @@ public class ItemService {
                         rental.getItem().getStatus()))
                 .toList();
 
-        return new UserRentalResponse(penaltyCount, itemResponses);
+        return new UserRentalResponse(itemResponses, penaltyCount);
 
     }
 
