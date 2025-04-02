@@ -60,7 +60,6 @@ public class ItemService {
         Item item = itemRepository.findById(request.itemId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid item id: " + request.itemId()));
         if (item.getStatus() != ItemStatus.RENTAL_AVAILABLE) {
-            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             throw new IllegalArgumentException("Invalid item status: " + item.getStatus());
         }
 
