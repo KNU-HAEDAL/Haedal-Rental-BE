@@ -110,6 +110,11 @@ public class ItemService {
                 .max(Comparator.comparing(Rental::getRentalDate))
                 .orElseThrow(() -> new IllegalArgumentException("반납되지 않은 대여 내역이 없습니다."));
 
+        Member member = authUtil.getCurrentUser();
+        if (rental.getMember().getId() != member.getId()) {
+            throw new IllegalArgumentException("다른 회원이 대여한 item입니다.");
+        }
+
         rental.setReturnDate(LocalDate.now());
 
         changeItemStatus(rental.getId(), ItemStatus.RENTAL_AVAILABLE);
