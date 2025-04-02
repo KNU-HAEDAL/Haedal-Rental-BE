@@ -5,5 +5,5 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ItemRentalRepository extends JpaRepository<Rental, Long> {
-    List<Rental> findByItem_Id(Long itemId);
+    List<Rental> findAllByItem_Id(Long itemId);
 }
