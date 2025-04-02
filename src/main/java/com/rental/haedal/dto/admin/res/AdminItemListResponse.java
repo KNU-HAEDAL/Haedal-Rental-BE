@@ -6,6 +6,7 @@ import com.rental.haedal.domain.enums.ItemStatus;
 import java.time.LocalDate;
 
 public record AdminItemListResponse(
+        Long itemId,
         ItemCategory itemCategory,
         String itemName,
         ItemStatus itemStatus,

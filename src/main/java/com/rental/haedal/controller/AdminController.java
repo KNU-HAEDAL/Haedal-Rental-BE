@@ -1,14 +1,11 @@
 package com.rental.haedal.controller;
 
 
-import com.rental.haedal.dto.admin.req.AdminAddItemRequest;
-import com.rental.haedal.dto.admin.req.AdminItemRequest;
-import com.rental.haedal.dto.admin.res.AdminItemAddResponse;
-import com.rental.haedal.dto.admin.res.AdminItemDetailResponse;
-import com.rental.haedal.dto.admin.res.AdminItemEditResponse;
-import com.rental.haedal.dto.admin.res.AdminItemListResponse;
-import com.rental.haedal.dto.admin.res.AdminItemStatusChangeResponse;
 import com.rental.haedal.domain.enums.ItemStatus;
+import com.rental.haedal.dto.admin.req.AdminAddItemRequest;
+import com.rental.haedal.dto.admin.req.AdminDeleteItemRequest;
+import com.rental.haedal.dto.admin.req.AdminItemRequest;
+import com.rental.haedal.dto.admin.res.*;
 import com.rental.haedal.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -57,12 +54,18 @@ public class AdminController {
     }
 
     @DeleteMapping("/item")
-    @Operation(summary = "[구현 안됨] 대여 물품 삭제", description = "관리자가 물품을 삭제함. 삭제한 물품의 데이터베이스상의 id 값 반환")
+    @Operation(summary = "대여 물품 삭제", description = "관리자가 물품을 삭제함. 삭제한 물품의 데이터베이스상의 id 값 반환")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "400", description = "해당 물품이 존재하지 않음")
     })
-    public ResponseEntity<AdminItemEditResponse> adminDeleteItem(@RequestBody @Parameter AdminItemRequest request) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> adminDeleteItem(@RequestBody @Parameter AdminDeleteItemRequest request) {
+        try {
+            Long itemId = itemService.deleteItem(request);
+            return ResponseEntity.ok(new AdminItemDeleteResponse(itemId));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/itemDetail/{itemId}")

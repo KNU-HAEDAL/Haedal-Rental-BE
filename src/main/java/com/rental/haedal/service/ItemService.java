@@ -9,6 +9,7 @@ import com.rental.haedal.domain.enums.ItemStatus;
 import com.rental.haedal.dto.admin.req.AdminAddItemRequest;
 import com.rental.haedal.dto.rental.req.RentalRequest;
 import com.rental.haedal.dto.rental.res.ItemRentalResponse;
+import com.rental.haedal.dto.admin.req.AdminDeleteItemRequest;
 import com.rental.haedal.dto.rental.res.ItemResponse;
 import com.rental.haedal.repository.ItemRentalRepository;
 import com.rental.haedal.repository.ItemRepository;
@@ -36,12 +37,20 @@ public class ItemService {
         return item.getId();
     }
 
+    public Long deleteItem(AdminDeleteItemRequest request) {
+        Item item = itemRepository.findById(request.itemId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 물품은 존재하지 않습니다."));
+
+        itemRepository.delete(item);
+
+        return item.getId();
+    }
+
     public Page<ItemResponse> getItems(ItemCategory itemCategory, Pageable pageable) {
         Page<Item> items;
         if (itemCategory == null) {
             items = itemRepository.findAll(pageable);
-        }
-        else {
+        } else {
             items = itemRepository.findAllByCategory(itemCategory, pageable);
         }
 
