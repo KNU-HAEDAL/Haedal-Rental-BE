@@ -18,8 +18,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/rental")
 @RequiredArgsConstructor
@@ -51,12 +49,12 @@ public class RentalController {
     }
 
     @GetMapping("")
-    @Operation(summary = "[구현 안됨] 유저의 빌린 물품 확인", description = "Token 값에서 유저 ID를 추출하여 빌린 물품을 확인합니다.")
+    @Operation(summary = "유저의 빌린 물품 확인", description = "Token 값에서 유저 ID를 추출하여 빌린 물품을 확인합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
     public ResponseEntity<UserRentalResponse> getUserItemList() {
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(itemService.userRentalItem());
     }
 
     @PostMapping("/return")
