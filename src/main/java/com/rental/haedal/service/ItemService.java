@@ -77,7 +77,7 @@ public class ItemService {
                 .member(member)
                 .item(item)
                 .rentalDate(request.rentalDate())
-                .returnDate(request.rentalDate().plusDays(7))
+                .dueDate(request.rentalDate().plusDays(7))
                 .build();
         itemRentalRepository.save(rental);
 

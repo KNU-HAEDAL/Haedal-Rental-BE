@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Rental {
     @Id
-    @Column(name = "id")
+    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -27,9 +27,12 @@ public class Rental {
     @JoinColumn(name = "itemId")
     private Item item;
     
-    @Column(name = "rentalDate")
+    @Column
     private LocalDate rentalDate;
 
-    @Column(name = "returnDate")
+    @Column
+    private LocalDate dueDate;
+
+    @Column
     private LocalDate returnDate;
 }
