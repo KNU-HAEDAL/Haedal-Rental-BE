@@ -26,12 +26,12 @@ public class AdminController {
     private final ItemService itemService;
 
     @PutMapping("/changeItemStatus")
-    @Operation(summary = "[구현 안됨] 동방 물품의 상태 바꾸기", description = "관리자가 물품 상태를 바꿈으로써 동아리 물품을 대여할 수 있도록 함.")
+    @Operation(summary = "동방 물품의 상태 바꾸기", description = "관리자가 물품 상태를 강제로 변경합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
     public ResponseEntity<AdminItemStatusChangeResponse> adminChangeItemStatus(@RequestBody @Parameter AdminItemRequest request) {
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(itemService.changeItemStatus(request));
     }
 
     @GetMapping("/itemList")
