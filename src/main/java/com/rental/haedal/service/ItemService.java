@@ -81,6 +81,7 @@ public class ItemService {
                         rental.getItem().getCategory(),
                         rental.getItem().getItemName(),
                         rental.getDueDate()))
+                .sorted(Comparator.comparing(ItemIndividualResponse::dueDate))
                 .toList();
 
         return new UserRentalResponse(itemResponses, penaltyCount);
