@@ -1,6 +1,6 @@
 package com.rental.haedal.dto.admin.res;
 
-public record AdminItemEditResponse(
+public record AdminItemDeleteResponse(
         long itemId
 ) {
 }
