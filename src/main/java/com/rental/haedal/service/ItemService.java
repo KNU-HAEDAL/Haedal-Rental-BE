@@ -99,7 +99,7 @@ public class ItemService {
 
     @Transactional
     public ItemReturnResponse returnItem(ItemReturnRequest request) {
-        List<Rental> rentals = itemRentalRepository.findByItem_Id(request.itemId());
+        List<Rental> rentals = itemRentalRepository.findAllByItem_Id(request.itemId());
         if (rentals.isEmpty()) {
             throw new IllegalArgumentException("대여내역이 없는 item id: " + request.itemId());
         }
@@ -117,8 +117,8 @@ public class ItemService {
 
         rental.setReturnDate(LocalDate.now());
 
-        changeItemStatus(rental.getId(), ItemStatus.RENTAL_AVAILABLE);
+        changeItemStatus(rental.getItem().getId(), ItemStatus.RENTAL_AVAILABLE);
 
-        return new ItemReturnResponse(rental.getId());
+        return new ItemReturnResponse(rental.getItem().getId());
     }
 }
