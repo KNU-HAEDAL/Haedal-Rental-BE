@@ -95,6 +95,7 @@ public class ItemService {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid item id: " + itemId));
         item.setStatus(status);
+        itemRepository.save(item);
     }
 
     @Transactional
