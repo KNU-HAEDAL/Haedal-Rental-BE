@@ -6,9 +6,9 @@ import com.rental.haedal.domain.enums.ItemStatus;
 import com.rental.haedal.dto.admin.req.AdminAddItemRequest;
 import com.rental.haedal.dto.rental.res.ItemResponse;
 import com.rental.haedal.repository.ItemRepository;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,26 +27,22 @@ public class ItemService {
         return item.getId();
     }
 
-    public List<ItemResponse> getItems(ItemCategory itemCategory) {
-        List<Item> items;
-        List<ItemResponse> itemResponses = new ArrayList<>();
-
+    public Page<ItemResponse> getItems(ItemCategory itemCategory, Pageable pageable) {
+        Page<Item> items;
         if (itemCategory == null) {
-            items = itemRepository.findAll();
+            items = itemRepository.findAll(pageable);
         }
         else {
-            items = itemRepository.findAllByCategory(itemCategory);
+            items = itemRepository.findAllByCategory(itemCategory, pageable);
         }
 
-        for (Item item : items) {
-            itemResponses.add(new ItemResponse(
-                    item.getId(),
-                    item.getItemName(),
-                    item.getCategory(),
-                    item.getStatus()
-            ));
-        }
+        Page<ItemResponse> response = items.map(item -> new ItemResponse(
+                item.getId(),
+                item.getItemName(),
+                item.getCategory(),
+                item.getStatus()
+        ));
 
-        return itemResponses;
+        return response;
     }
 }
