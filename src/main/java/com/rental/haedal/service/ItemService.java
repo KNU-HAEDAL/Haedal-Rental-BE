@@ -9,11 +9,12 @@ import com.rental.haedal.domain.enums.ItemStatus;
 import com.rental.haedal.dto.admin.req.AdminAddItemRequest;
 import com.rental.haedal.dto.admin.req.AdminItemRequest;
 import com.rental.haedal.dto.admin.res.AdminItemStatusChangeResponse;
+import com.rental.haedal.dto.admin.req.AdminDeleteItemRequest;
 import com.rental.haedal.dto.rental.req.ItemReturnRequest;
 import com.rental.haedal.dto.rental.req.RentalRequest;
 import com.rental.haedal.dto.rental.res.ItemRentalResponse;
-import com.rental.haedal.dto.admin.req.AdminDeleteItemRequest;
 import com.rental.haedal.dto.rental.res.ItemResponse;
+import com.rental.haedal.dto.rental.res.UserRentalResponse;
 import com.rental.haedal.dto.rental.res.ItemReturnResponse;
 import com.rental.haedal.repository.ItemRentalRepository;
 import com.rental.haedal.repository.ItemRepository;
@@ -25,6 +26,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -69,6 +72,24 @@ public class ItemService {
         ));
 
         return response;
+    }
+
+    public UserRentalResponse checkRentalItem() {
+        Member member = authUtil.getCurrentUser();
+
+        Integer penaltyCount = member.getPenaltyCount();
+
+        List<ItemResponse> itemResponses = itemRentalRepository.findByMember(member)
+                .stream()
+                .map(rental -> new ItemResponse(
+                        rental.getItem().getId(),
+                        rental.getItem().getItemName(),
+                        rental.getItem().getCategory(),
+                        rental.getItem().getStatus()))
+                .toList();
+
+        return new UserRentalResponse(penaltyCount, itemResponses);
+
     }
 
     @Transactional
