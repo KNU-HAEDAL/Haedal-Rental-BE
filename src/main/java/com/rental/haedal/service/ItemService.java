@@ -12,10 +12,7 @@ import com.rental.haedal.dto.admin.req.AdminItemRequest;
 import com.rental.haedal.dto.admin.res.AdminItemStatusChangeResponse;
 import com.rental.haedal.dto.rental.req.ItemReturnRequest;
 import com.rental.haedal.dto.rental.req.RentalRequest;
-import com.rental.haedal.dto.rental.res.ItemRentalResponse;
-import com.rental.haedal.dto.rental.res.ItemResponse;
-import com.rental.haedal.dto.rental.res.ItemReturnResponse;
-import com.rental.haedal.dto.rental.res.UserRentalResponse;
+import com.rental.haedal.dto.rental.res.*;
 import com.rental.haedal.repository.ItemRentalRepository;
 import com.rental.haedal.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -77,17 +74,18 @@ public class ItemService {
 
         Integer penaltyCount = member.getPenaltyCount();
 
-        List<ItemResponse> itemResponses = itemRentalRepository.findByMember(member)
+        List<ItemIndividualResponse> itemResponses = itemRentalRepository.findByMember(member)
                 .stream()
-                .map(rental -> new ItemResponse(
+                .map(rental -> new ItemIndividualResponse(
                         rental.getItem().getId(),
-                        rental.getItem().getItemName(),
                         rental.getItem().getCategory(),
+                        rental.getItem().getItemName(),
+                        rental.getDueDate(),
                         rental.getItem().getStatus()))
+                .sorted(Comparator.comparing(ItemIndividualResponse::dueDate))
                 .toList();
 
-        return new UserRentalResponse(penaltyCount, itemResponses);
-
+        return new UserRentalResponse(itemResponses, penaltyCount);
     }
 
     @Transactional
