@@ -42,10 +42,14 @@ public class AuthUtil {
 
     // JWT Access Token 발급
     public String createAccessToken(String userId, long accessExpireTimeMs) {
+        Member member = memberRepository.findByUserId(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 userId 입니다"));
+
         try {
             return Jwts.builder()
                     .issuer("server")
                     .claim("userId", userId)
+                    .claim("role", member.getAuthority())
                     .claim("tokenType", "access")
                     .expiration(new Date(System.currentTimeMillis() + accessExpireTimeMs))
                     .issuedAt(new Date(System.currentTimeMillis()))
@@ -58,10 +62,13 @@ public class AuthUtil {
 
     // JWT Refresh Token 발급
     public String createRefreshToken(String userId, long refreshExpireTimeMs) {
+        Member member = memberRepository.findByUserId(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 userId 입니다"));
         try {
             return Jwts.builder()
                     .issuer("server")
                     .claim("userId", userId)
+                    .claim("role", member.getAuthority())
                     .claim("tokenType", "refresh")
                     .expiration(new Date(System.currentTimeMillis() + refreshExpireTimeMs))
                     .issuedAt(new Date(System.currentTimeMillis()))
