@@ -54,7 +54,7 @@ public class AuthController {
     }
 
     @PostMapping("/duplicate/id")
-    @Operation(summary = "아이디 중복확인", description = "회원가입시 아이디가 중복되는지 확인. 중복 시 False 값을 반환합니다.")
+    @Operation(summary = "[구현 안됨] 아이디 중복확인", description = "회원가입시 아이디가 중복되는지 확인. 중복 시 False 값을 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
@@ -63,7 +63,7 @@ public class AuthController {
     }
 
     @PostMapping("/duplicate/phoneNumber")
-    @Operation(summary = "전화번호 중복확인", description = "회원가입시 전화번호가 중복되는지 확인. 중복 시 False 값을 반환합니다.")
+    @Operation(summary = "[구현 안됨] 전화번호 중복확인", description = "회원가입시 전화번호가 중복되는지 확인. 중복 시 False 값을 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
@@ -82,7 +82,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    @Operation(summary = "토큰 재발급", description = "사용자 토큰을 재발급")
+    @Operation(summary = "[구현 안됨] 토큰 재발급", description = "사용자 토큰을 재발급")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
@@ -91,7 +91,7 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    @Operation(summary = "로그아웃", description = "사용자가 로그아웃. ")
+    @Operation(summary = "[구현 안됨] 로그아웃", description = "사용자가 로그아웃. ")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })

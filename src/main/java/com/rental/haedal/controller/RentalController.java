@@ -38,7 +38,7 @@ public class RentalController {
 
 
     @PostMapping("")
-    @Operation(summary = "물품 대여", description = "물품 대여 장부를 작성하여 전송합니다. 대여한 itemId를 반환합니다.")
+    @Operation(summary = "[구현 안됨] 물품 대여", description = "물품 대여 장부를 작성하여 전송합니다. 대여한 itemId를 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
@@ -47,7 +47,7 @@ public class RentalController {
     }
 
     @GetMapping("")
-    @Operation(summary = "유저의 빌린 물품 확인", description = "Token 값에서 유저 ID를 추출하여 빌린 물품을 확인합니다.")
+    @Operation(summary = "[구현 안됨] 유저의 빌린 물품 확인", description = "Token 값에서 유저 ID를 추출하여 빌린 물품을 확인합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
@@ -56,7 +56,7 @@ public class RentalController {
     }
 
     @PostMapping("/return")
-    @Operation(summary = "물품 반납", description = "물품을 반납하고 해당 itemId 값을 반환합니다.")
+    @Operation(summary = "[구현 안됨] 물품 반납", description = "물품을 반납하고 해당 itemId 값을 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
