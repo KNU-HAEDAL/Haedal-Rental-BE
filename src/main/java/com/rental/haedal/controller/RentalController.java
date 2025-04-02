@@ -13,6 +13,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,10 +32,12 @@ public class RentalController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
-    public ResponseEntity<List<ItemResponse>> getItemList(
-            @RequestParam(required = false) @Parameter(description = "아이템 카테고리") ItemCategory itemCategory
+    public ResponseEntity<Page<ItemResponse>> getItemList(
+            @RequestParam(required = false) @Parameter(description = "아이템 카테고리") ItemCategory itemCategory,
+            @RequestParam(defaultValue = "0") @Parameter(description = "페이지 번호") int page,
+            @RequestParam(defaultValue = "10") @Parameter(description = "페이지 크기") int size
     ) {
-        return ResponseEntity.ok(itemService.getItems(itemCategory));
+        return ResponseEntity.ok(itemService.getItems(itemCategory, PageRequest.of(page, size)));
     }
 
 
@@ -42,7 +46,7 @@ public class RentalController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
-    public ResponseEntity<ItemRentalResponse> postRental(@RequestBody @Parameter RentalRequest request) {
+    public ResponseEntity<ItemRentalResponse> rentItem(@RequestBody @Parameter RentalRequest request) {
         return ResponseEntity.ok().build();
     }
 
