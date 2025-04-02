@@ -7,12 +7,17 @@ import com.rental.haedal.domain.Rental;
 import com.rental.haedal.domain.enums.ItemCategory;
 import com.rental.haedal.domain.enums.ItemStatus;
 import com.rental.haedal.dto.admin.req.AdminAddItemRequest;
+import com.rental.haedal.dto.rental.req.ItemReturnRequest;
 import com.rental.haedal.dto.rental.req.RentalRequest;
 import com.rental.haedal.dto.rental.res.ItemRentalResponse;
 import com.rental.haedal.dto.admin.req.AdminDeleteItemRequest;
 import com.rental.haedal.dto.rental.res.ItemResponse;
+import com.rental.haedal.dto.rental.res.ItemReturnResponse;
 import com.rental.haedal.repository.ItemRentalRepository;
 import com.rental.haedal.repository.ItemRepository;
+import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -90,5 +95,25 @@ public class ItemService {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid item id: " + itemId));
         item.setStatus(status);
+    }
+
+    @Transactional
+    public ItemReturnResponse returnItem(ItemReturnRequest request) {
+        List<Rental> rentals = itemRentalRepository.findByItem_Id(request.itemId());
+        if (rentals.isEmpty()) {
+            throw new IllegalArgumentException("대여내역이 없는 item id: " + request.itemId());
+        }
+
+        // 아직 반납되지 않은 대여(Rental.returnDate가 null)를 찾음
+        Rental rental = rentals.stream()
+                .filter(r -> r.getReturnDate() == null)
+                .max(Comparator.comparing(Rental::getRentalDate))
+                .orElseThrow(() -> new IllegalArgumentException("반납되지 않은 대여 내역이 없습니다."));
+
+        rental.setReturnDate(LocalDate.now());
+
+        changeItemStatus(rental.getId(), ItemStatus.RENTAL_AVAILABLE);
+
+        return new ItemReturnResponse(rental.getId());
     }
 }

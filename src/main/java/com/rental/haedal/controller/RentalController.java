@@ -5,6 +5,7 @@ import com.rental.haedal.dto.rental.req.ItemReturnRequest;
 import com.rental.haedal.dto.rental.req.RentalRequest;
 import com.rental.haedal.dto.rental.res.ItemRentalResponse;
 import com.rental.haedal.dto.rental.res.ItemResponse;
+import com.rental.haedal.dto.rental.res.ItemReturnResponse;
 import com.rental.haedal.dto.rental.res.UserRentalResponse;
 import com.rental.haedal.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,8 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/rental")
@@ -60,11 +59,11 @@ public class RentalController {
     }
 
     @PostMapping("/return")
-    @Operation(summary = "[구현 안됨] 물품 반납", description = "물품을 반납하고 해당 itemId 값을 반환합니다.")
+    @Operation(summary = "물품 반납", description = "물품을 반납하고 해당 itemId 값을 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
-    public ResponseEntity<ItemRentalResponse> returnRentalItem(@RequestBody @Parameter ItemReturnRequest request) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ItemReturnResponse> returnRentalItem(@RequestBody @Parameter ItemReturnRequest request) {
+        return ResponseEntity.ok(itemService.returnItem(request));
     }
 }
