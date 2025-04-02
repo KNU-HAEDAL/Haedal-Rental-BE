@@ -29,7 +29,7 @@ public class AdminController {
     private final ItemService itemService;
 
     @PutMapping("/changeItemStatus")
-    @Operation(summary = "동방 물품의 상태 바꾸기", description = "관리자가 물품 상태를 바꿈으로써 동아리 물품을 대여할 수 있도록 함.")
+    @Operation(summary = "[구현 안됨] 동방 물품의 상태 바꾸기", description = "관리자가 물품 상태를 바꿈으로써 동아리 물품을 대여할 수 있도록 함.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
@@ -38,7 +38,7 @@ public class AdminController {
     }
 
     @GetMapping("/itemList")
-    @Operation(summary = "상태별 물품리스트 조회", description = "관리자가 페이지의 물품을 조회함.")
+    @Operation(summary = "[구현 안됨] 상태별 물품리스트 조회", description = "관리자가 페이지의 물품을 조회함.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
@@ -57,7 +57,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/item")
-    @Operation(summary = "대여 물품 삭제", description = "관리자가 물품을 삭제함. 삭제한 물품의 데이터베이스상의 id 값 반환")
+    @Operation(summary = "[구현 안됨] 대여 물품 삭제", description = "관리자가 물품을 삭제함. 삭제한 물품의 데이터베이스상의 id 값 반환")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
@@ -66,7 +66,7 @@ public class AdminController {
     }
 
     @GetMapping("/itemDetail/{itemId}")
-    @Operation(summary = "대여 물품 상세 조회", description = "관리자가 물품의 상세 정보를 확인함.")
+    @Operation(summary = "[구현 안됨] 대여 물품 상세 조회", description = "관리자가 물품의 상세 정보를 확인함.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
