@@ -42,12 +42,12 @@ public class RentalController {
 
 
     @PostMapping("")
-    @Operation(summary = "[구현 안됨] 물품 대여", description = "물품 대여 장부를 작성하여 전송합니다. 대여한 itemId를 반환합니다.")
+    @Operation(summary = "물품 대여", description = "물품 대여 장부를 작성하여 전송합니다. 대여한 itemId를 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
     public ResponseEntity<ItemRentalResponse> rentItem(@RequestBody @Parameter RentalRequest request) {
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(itemService.rentItem(request));
     }
 
     @GetMapping("")
