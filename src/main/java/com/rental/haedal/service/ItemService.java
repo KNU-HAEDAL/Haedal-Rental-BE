@@ -80,7 +80,8 @@ public class ItemService {
                         rental.getItem().getId(),
                         rental.getItem().getCategory(),
                         rental.getItem().getItemName(),
-                        rental.getDueDate()))
+                        rental.getDueDate(),
+                        rental.getItem().getStatus()))
                 .sorted(Comparator.comparing(ItemIndividualResponse::dueDate))
                 .toList();
 
