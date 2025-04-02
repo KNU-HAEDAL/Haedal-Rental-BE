@@ -1,5 +1,7 @@
 package com.rental.haedal.auth;
 
+import com.rental.haedal.domain.Member;
+import com.rental.haedal.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -7,6 +9,9 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -16,10 +21,12 @@ import java.util.Date;
 public class AuthUtil {
 
     private final SecretKey key;
+    private final MemberRepository memberRepository;
 
     // 생성자에서 secretKey를 가져와서 key에 할당
-    public AuthUtil(@Value("${jwt.secret}") String secret) {
+    public AuthUtil(@Value("${jwt.secret}") String secret, MemberRepository memberRepository) {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));  // secret을 사용하여 key 생성
+        this.memberRepository = memberRepository;
     }
 
     // claim 으로부터 DB 의 ID 추출하기
@@ -97,5 +104,14 @@ public class AuthUtil {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+    }
+
+
+    public Member getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+
+        return memberRepository.findByUserId(username)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username));
     }
 }

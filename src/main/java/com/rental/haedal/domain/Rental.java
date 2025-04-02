@@ -3,8 +3,16 @@ package com.rental.haedal.domain;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
 public class Rental {
     @Id
     @Column(name = "id")
