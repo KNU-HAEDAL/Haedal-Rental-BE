@@ -37,4 +37,7 @@ public class Rental {
     @Column
     @Setter
     private LocalDate returnDate;
+
+    @Column
+    private String pictureUrl;
 }
