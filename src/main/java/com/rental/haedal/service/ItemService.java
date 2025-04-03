@@ -9,6 +9,7 @@ import com.rental.haedal.domain.enums.ItemStatus;
 import com.rental.haedal.dto.admin.req.AdminAddItemRequest;
 import com.rental.haedal.dto.admin.req.AdminDeleteItemRequest;
 import com.rental.haedal.dto.admin.req.AdminItemRequest;
+import com.rental.haedal.dto.admin.res.AdminItemResponse;
 import com.rental.haedal.dto.admin.res.AdminItemStatusChangeResponse;
 import com.rental.haedal.dto.rental.req.ItemReturnRequest;
 import com.rental.haedal.dto.rental.req.RentalRequest;
@@ -68,6 +69,36 @@ public class ItemService {
 
         return response;
     }
+
+    public Page<AdminItemResponse> getAdminItems(ItemStatus itemStatus, Pageable pageable) {
+        Page<Item> items = (itemStatus == null)
+                ? itemRepository.findAll(pageable)
+                : itemRepository.findAllByStatus(itemStatus, pageable);
+
+        return items.map(item -> {
+            // item의 가장 최근 rental 찾기
+            List<Rental> rentals = itemRentalRepository.findAllByItem_Id(item.getId());
+            Rental latestRental = rentals.stream()
+                    .max(Comparator.comparing(Rental::getRentalDate))
+                    .orElse(null);
+
+            AdminItemResponse.AdminItemResponseBuilder builder = AdminItemResponse.builder()
+                    .itemId(item.getId())
+                    .itemName(item.getItemName())
+                    .itemCategory(item.getCategory())
+                    .itemStatus(item.getStatus());
+
+            if (latestRental != null) {
+                builder.rentalDate(latestRental.getRentalDate())
+                        .dueDate(latestRental.getDueDate())
+                        .returnDate(latestRental.getReturnDate())
+                        .rentalMemberName(latestRental.getMember().getName());
+            }
+            return builder.build();
+        });
+    }
+
+
 
     public UserRentalResponse checkRentalItem() {
         Member member = authUtil.getCurrentUser();

@@ -13,6 +13,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,12 +37,16 @@ public class AdminController {
     }
 
     @GetMapping("/itemList")
-    @Operation(summary = "[구현 안됨] 상태별 물품리스트 조회", description = "관리자가 페이지의 물품을 조회함.")
+    @Operation(summary = "관리자용 상태별 물품리스트 조회", description = "관리자가 전체 물품을 조회합니다. itmeStatus에 따라 조회할 수 있습니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
-    public ResponseEntity<List<AdminItemListResponse>> adminCheckItemList(@RequestParam @Parameter(description = "아이템 상태") ItemStatus itemStatus) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Page<AdminItemResponse>> adminCheckItemList(
+            @RequestParam(required = false) @Parameter(description = "아이템 상태") ItemStatus itemStatus,
+            @RequestParam(defaultValue = "0") @Parameter(description = "페이지 번호") int page,
+            @RequestParam(defaultValue = "10") @Parameter(description = "페이지 크기") int size
+    ) {
+        return ResponseEntity.ok(itemService.getAdminItems(itemStatus, PageRequest.of(page, size)));
     }
 
     @PostMapping("/item")
