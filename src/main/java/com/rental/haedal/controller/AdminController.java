@@ -75,11 +75,11 @@ public class AdminController {
     }
 
     @GetMapping("/itemDetail/{itemId}")
-    @Operation(summary = "[구현 안됨] 대여 물품 상세 조회", description = "관리자가 물품의 상세 정보를 확인함.")
+    @Operation(summary = "대여 물품 상세 조회", description = "관리자가 물품의 상세 정보를 확인함.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
     })
-    public ResponseEntity<List<AdminItemDetailResponse>> adminItemDetail(@PathVariable @Parameter Long itemId) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<AdminItemDetailResponse> adminItemDetail(@PathVariable @Parameter Long itemId) {
+        return ResponseEntity.ok(itemService.getItemDetail(itemId));
     }
 }

@@ -10,6 +10,7 @@ import com.rental.haedal.dto.admin.req.AdminAddItemRequest;
 import com.rental.haedal.dto.admin.req.AdminDeleteItemRequest;
 import com.rental.haedal.dto.admin.req.AdminItemRequest;
 import com.rental.haedal.dto.admin.res.AdminItemResponse;
+import com.rental.haedal.dto.admin.res.AdminItemDetailResponse;
 import com.rental.haedal.dto.admin.res.AdminItemStatusChangeResponse;
 import com.rental.haedal.dto.rental.req.ItemReturnRequest;
 import com.rental.haedal.dto.rental.req.RentalRequest;
@@ -50,6 +51,35 @@ public class ItemService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 물품은 존재하지 않습니다."));
 
         itemRepository.delete(item);
+    }
+
+    public AdminItemDetailResponse getItemDetail(Long itemId) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("not exist item id: "+ itemId));
+
+        List<Rental> rentals = itemRentalRepository.findAllByItem_Id(itemId);
+
+        if (rentals.isEmpty()) {   // 대여내역이 한번도 없는경우
+            return AdminItemDetailResponse.builder()
+                    .itemName(item.getItemName())
+                    .itemCategory(item.getCategory())
+                    .build();
+        }
+        else {
+            // 가장 최근 대여내역 조회
+            Rental recentRental = rentals.stream()
+                    .max(Comparator.comparing(Rental::getRentalDate)).orElse(null);
+
+            return AdminItemDetailResponse.builder()
+                    .rentalMemberName(recentRental.getMember().getName())
+                    .rentalMemberPhoneNumber(recentRental.getMember().getPhoneNumber())
+                    .itemName(item.getItemName())
+                    .itemCategory(item.getCategory())
+                    .rentalDate(recentRental.getRentalDate())
+                    .returnDate(recentRental.getReturnDate())
+                    .lastPictureUrl(recentRental.getPictureUrl())
+                    .build();
+        }
     }
 
     public Page<ItemResponse> getItems(ItemCategory itemCategory, Pageable pageable) {
