@@ -17,6 +17,10 @@ import com.rental.haedal.dto.rental.req.RentalRequest;
 import com.rental.haedal.dto.rental.res.*;
 import com.rental.haedal.repository.ItemRentalRepository;
 import com.rental.haedal.repository.ItemRepository;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Base64;
+
 
 @Service
 @RequiredArgsConstructor
@@ -199,8 +205,28 @@ public class ItemService {
             throw new IllegalArgumentException("다른 회원이 대여한 item입니다.");
         }
 
-        rental.setReturnDate(LocalDate.now());
+        // Base64 이미지 디코딩 후 저장
+        String encoded = request.base64Image();
+        if (encoded != null && !encoded.isBlank()) {
+            try {
+                byte[] decodedImg = Base64.getDecoder().decode(encoded);
+                String fileName = rental.getId().toString() + ".jpg";
+                Path saveDir  = Paths.get("/home/ubuntu/app/images/returns");
+//                Path saveDir  = Paths.get("src/main/resources/static/images/returns");  // 개발용
+                Files.createDirectories(saveDir);
+                Path filePath = saveDir.resolve(fileName);  // 디렉토리와 fileName을 합쳐 최종 파일경로 생성
+                Files.write(filePath, decodedImg);
 
+                // 웹에서 접근 가능한 URL 생성 및 저장
+                String imageUrl = "/images/returns/" + rental.getId().toString();
+                rental.setPictureUrl(imageUrl);
+            } catch (IOException e) {
+                throw new RuntimeException("반납 이미지 저장 중 오류가 발생했습니다.", e);
+            }
+        }
+
+        // 기타 물품 반납 처리
+        rental.setReturnDate(LocalDate.now());
         changeItemStatus(rental.getItem().getId(), ItemStatus.RENTAL_AVAILABLE);
 
         return new ItemReturnResponse(rental.getItem().getId());
