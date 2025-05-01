@@ -21,13 +21,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Base64;
@@ -65,27 +65,34 @@ public class ItemService {
 
         List<Rental> rentals = itemRentalRepository.findAllByItem_Id(itemId);
 
-        if (rentals.isEmpty()) {   // 대여내역이 한번도 없는경우
+        // 대여내역이 한번도 없는경우
+        if (rentals.isEmpty()) {
             return AdminItemDetailResponse.builder()
                     .itemName(item.getItemName())
                     .itemCategory(item.getCategory())
                     .build();
         }
-        else {
-            // 가장 최근 대여내역 조회
-            Rental recentRental = rentals.stream()
-                    .max(Comparator.comparing(Rental::getRentalDate)).orElse(null);
 
-            return AdminItemDetailResponse.builder()
-                    .rentalMemberName(recentRental.getMember().getName())
-                    .rentalMemberPhoneNumber(recentRental.getMember().getPhoneNumber())
-                    .itemName(item.getItemName())
-                    .itemCategory(item.getCategory())
-                    .rentalDate(recentRental.getRentalDate())
-                    .returnDate(recentRental.getReturnDate())
-                    .lastPictureUrl(recentRental.getPictureUrl())
-                    .build();
-        }
+        // 가장 최근 대여내역 조회
+        Comparator<Rental> byRentalThenReturn = Comparator
+                .comparing(Rental::getRentalDate)
+                .thenComparing(
+                        Rental::getReturnDateTime,
+                        Comparator.nullsLast(Comparator.naturalOrder())
+                );
+        Rental recentRental = rentals.stream()
+                .max(byRentalThenReturn)
+                .orElse(null);
+
+        return AdminItemDetailResponse.builder()
+                .rentalMemberName(recentRental.getMember().getName())
+                .rentalMemberPhoneNumber(recentRental.getMember().getPhoneNumber())
+                .itemName(item.getItemName())
+                .itemCategory(item.getCategory())
+                .rentalDate(recentRental.getRentalDate())
+                .returnDateTime(recentRental.getReturnDateTime())
+                .lastPictureUrl(recentRental.getPictureUrl())
+                .build();
     }
 
     public Page<ItemResponse> getItems(ItemCategory itemCategory, Pageable pageable) {
@@ -127,7 +134,7 @@ public class ItemService {
             if (latestRental != null) {
                 builder.rentalDate(latestRental.getRentalDate())
                         .dueDate(latestRental.getDueDate())
-                        .returnDate(latestRental.getReturnDate())
+                        .returnDateTime(latestRental.getReturnDateTime())
                         .rentalMemberName(latestRental.getMember().getName());
             }
             return builder.build();
@@ -181,7 +188,7 @@ public class ItemService {
         // 관리자용 강제 반납처리
         if (request.itemStatus() == ItemStatus.RENTAL_AVAILABLE) {
             Rental rental = findRentalByItemId(request.itemId());
-            rental.setReturnDate(LocalDate.now());
+            rental.setReturnDateTime(LocalDateTime.now());
         }
 
         changeItemStatus(request.itemId(), request.itemStatus());
@@ -226,7 +233,7 @@ public class ItemService {
         }
 
         // 기타 물품 반납 처리
-        rental.setReturnDate(LocalDate.now());
+        rental.setReturnDateTime(LocalDateTime.now());
         changeItemStatus(rental.getItem().getId(), ItemStatus.RENTAL_AVAILABLE);
 
         return new ItemReturnResponse(rental.getItem().getId());
@@ -238,9 +245,9 @@ public class ItemService {
             throw new IllegalArgumentException("대여내역이 없는 item id: " + itemId);
         }
 
-        // 아직 반납되지 않은 대여(Rental.returnDate가 null)를 찾음
+        // 아직 반납되지 않은 대여(Rental.returnDateTime ==  null)를 찾음
         return rentals.stream()
-                .filter(r -> r.getReturnDate() == null)
+                .filter(r -> r.getReturnDateTime() == null)
                 .max(Comparator.comparing(Rental::getRentalDate))
                 .orElseThrow(() -> new IllegalArgumentException("해당 item의 반납되지 않은 대여 내역이 없습니다."));
     }

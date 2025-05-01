@@ -4,6 +4,7 @@ import com.rental.haedal.domain.enums.ItemCategory;
 import com.rental.haedal.domain.enums.ItemStatus;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.Builder;
 
 @Builder
@@ -14,7 +15,7 @@ public record AdminItemResponse(
         ItemStatus itemStatus,
         LocalDate rentalDate,
         LocalDate dueDate,
-        LocalDate returnDate,
+        LocalDateTime returnDateTime,
         String rentalMemberName
 ) {
 }
