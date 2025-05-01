@@ -168,7 +168,7 @@ public class ItemService {
 
         changeItemStatus(item.getId(), ItemStatus.RENTING);
 
-        return new ItemRentalResponse(rental.getId());
+        return new ItemRentalResponse(item.getId());
     }
 
     public AdminItemStatusChangeResponse changeItemStatus(AdminItemRequest request) {
