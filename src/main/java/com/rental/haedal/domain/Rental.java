@@ -3,6 +3,7 @@ package com.rental.haedal.domain;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,7 +37,7 @@ public class Rental {
 
     @Column
     @Setter
-    private LocalDate returnDate;
+    private LocalDateTime returnDateTime;
 
     @Column
     @Setter
