@@ -65,27 +65,34 @@ public class ItemService {
 
         List<Rental> rentals = itemRentalRepository.findAllByItem_Id(itemId);
 
-        if (rentals.isEmpty()) {   // 대여내역이 한번도 없는경우
+        // 대여내역이 한번도 없는경우
+        if (rentals.isEmpty()) {
             return AdminItemDetailResponse.builder()
                     .itemName(item.getItemName())
                     .itemCategory(item.getCategory())
                     .build();
         }
-        else {
-            // 가장 최근 대여내역 조회
-            Rental recentRental = rentals.stream()
-                    .max(Comparator.comparing(Rental::getRentalDate)).orElse(null);
 
-            return AdminItemDetailResponse.builder()
-                    .rentalMemberName(recentRental.getMember().getName())
-                    .rentalMemberPhoneNumber(recentRental.getMember().getPhoneNumber())
-                    .itemName(item.getItemName())
-                    .itemCategory(item.getCategory())
-                    .rentalDate(recentRental.getRentalDate())
-                    .returnDateTime(recentRental.getReturnDateTime())
-                    .lastPictureUrl(recentRental.getPictureUrl())
-                    .build();
-        }
+        // 가장 최근 대여내역 조회
+        Comparator<Rental> byRentalThenReturn = Comparator
+                .comparing(Rental::getRentalDate)
+                .thenComparing(
+                        Rental::getReturnDateTime,
+                        Comparator.nullsLast(Comparator.naturalOrder())
+                );
+        Rental recentRental = rentals.stream()
+                .max(byRentalThenReturn)
+                .orElse(null);
+
+        return AdminItemDetailResponse.builder()
+                .rentalMemberName(recentRental.getMember().getName())
+                .rentalMemberPhoneNumber(recentRental.getMember().getPhoneNumber())
+                .itemName(item.getItemName())
+                .itemCategory(item.getCategory())
+                .rentalDate(recentRental.getRentalDate())
+                .returnDateTime(recentRental.getReturnDateTime())
+                .lastPictureUrl(recentRental.getPictureUrl())
+                .build();
     }
 
     public Page<ItemResponse> getItems(ItemCategory itemCategory, Pageable pageable) {
